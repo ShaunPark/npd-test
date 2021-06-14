@@ -1,16 +1,62 @@
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+---
+# Source: node-problem-detector/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: npd-binding
+  name: node-problem-detector
   labels:
-    kubernetes.io/cluster-service: "true"
-    addonmanager.kubernetes.io/mode: Reconcile
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:node-problem-detector
+    app.kubernetes.io/name: node-problem-detector
+    # helm.sh/chart: node-problem-detector-2.0.2
+    # app.kubernetes.io/instance: node-problem-detector
+    # app.kubernetes.io/managed-by: Helm
+---
+# Source: node-problem-detector/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node-problem-detector
+  labels:
+    app.kubernetes.io/name: node-problem-detector
+    # helm.sh/chart: node-problem-detector-2.0.2
+    # app.kubernetes.io/instance: node-problem-detector
+    # app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - nodes/status
+  verbs:
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+---
+# Source: node-problem-detector/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node-problem-detector
+  labels:
+    app.kubernetes.io/name: node-problem-detector
+    # helm.sh/chart: node-problem-detector-2.0.2
+    # app.kubernetes.io/instance: node-problem-detector
+    # app.kubernetes.io/managed-by: Helm
 subjects:
 - kind: ServiceAccount
   name: node-problem-detector
-  namespace: kube-system
- 
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: node-problem-detector
+  apiGroup: rbac.authorization.k8s.io

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: node-problem-detector
-  namespace: kube-system
+  namespace: default
   labels:
     app: node-problem-detector
 spec:
@@ -14,6 +14,7 @@ spec:
       labels:
         app: node-problem-detector
     spec:
+      serviceAccountName: node-problem-detector
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
