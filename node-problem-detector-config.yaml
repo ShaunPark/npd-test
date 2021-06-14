@@ -17,6 +17,11 @@ data:
                 "type": "ReadonlyFilesystem",
                 "reason": "FilesystemIsNotReadOnly",
                 "message": "Filesystem is not read-only"
+            },
+            {
+                "type": "CustomErrorCondition",
+                "reason": "EFS has no problem",
+                "message": "EFS has mounted correctly"
             }
         ],
         "rules": [
@@ -67,6 +72,12 @@ data:
                 "condition": "ReadonlyFilesystem",
                 "reason": "FilesystemIsReadOnly",
                 "pattern": "Remounting filesystem read-only"
+            },
+            {
+                "type": "permanent",
+                "condition": "CustomErrorCondition",
+                "reason": "EFS Mounting failed for custom error condition",
+                "pattern": "Mounting Failed"
             }
         ]
     }
